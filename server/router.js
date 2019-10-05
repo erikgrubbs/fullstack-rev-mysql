@@ -13,4 +13,7 @@ router
   .route('/images')
   .post(controller.images.post)
 
+router
+  .route('/students/:id')
+  .put(controller.students.update)  
 module.exports = router

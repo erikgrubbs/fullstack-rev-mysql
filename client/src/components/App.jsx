@@ -5,27 +5,34 @@ import Add from './Add.jsx';
 import Random from './Random.jsx';
 
 export default class App extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       'page': 'home',
-      'studentlist' : []
+      'studentlist': []
     }
     this.getStudents = this.getStudents.bind(this);
-    this.changepage = this.changepage.bind(this)
+    this.changepage = this.changepage.bind(this);
+    this.updateName = this.updateName.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.getStudents()
   }
 
-  getStudents(){
+  updateName(id, name) {
+    axios.put(`/api/students/${id}`, { 
+      name: name
+     })
+      .then(() => this.getStudents())
+      .catch((err) => console.error(err));
+  }
+
+  getStudents() {
     axios.get('/api/students')
       .then((data) => {
         this.setState({
           'studentlist': data.data
-        }, () => {
-          console.log(this.state)
         })
       })
       .catch((err) => {
@@ -33,31 +40,31 @@ export default class App extends React.Component {
       })
   }
 
-  changepage(e){
-    if (e.target.value === 'home'){
+  changepage(e) {
+    if (e.target.value === 'home') {
       this.getStudents()
     }
     this.setState({
       'page': e.target.value
-    }, () => console.log(this.state))
+    })
   }
 
   render() {
-    if (this.state.page === 'add'){
+    if (this.state.page === 'add') {
       return (
         <div>
           <Add />
           <button value='home' onClick={(e) => this.changepage(e)}>Back</button>
         </div>
       )
-    } else if (this.state.page === 'list'){
+    } else if (this.state.page === 'list') {
       return (
         <div>
-          <List students={this.state.studentlist} />
+          <List update={this.updateName} students={this.state.studentlist} />
           <button value='home' onClick={(e) => this.changepage(e)}>Back</button>
         </div>
       )
-    } else if (this.state.page === 'random'){
+    } else if (this.state.page === 'random') {
       return (
         <div>
           <Random students={this.state.studentlist} />

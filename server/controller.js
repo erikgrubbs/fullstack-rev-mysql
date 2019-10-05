@@ -4,25 +4,24 @@ const controller = {
   students: {
     get: (req, res) => {
       helper.students.getStudent(function(err, results) {
-        if (err) { console.error(err) };
-        res.json(results);
+        if (err) {res.status(404).send(err)};
+        res.status(200).json(results);
       });
     },
     post: (req, res) => {
-      // res.status(200).send("posted a name")
       var name = req.body.name;
       helper.students.postName(name, (err, results) => {
-        if (err) {console.error(err)};
+        if (err) {res.status(400).send(err)};
         res.status(200).send('successfully posted')
       })
     },
     update: (req, res) => {
-      var request = {
+      var information = {
         newName: req.body.name,
-        id: req.body.id
+        id: req.params.id
       };
-      helper.students.updateName(request, () => {
-        if (err) {console.error(err)};
+      helper.students.updateName(information, (err) => {
+        if (err) {res.status(404).send(err)};
         res.status(200).send('successfully updated')
       })
     }
@@ -33,7 +32,7 @@ const controller = {
       // res.status(200).send("posted an img")
       var imgurl = req.body.imgurl;
       helper.images.postImg(imgurl, (err, results) => {
-        if (err) {console.error(err)};
+        if (err) {res.status(400).send(err)};
         res.status(200).send('success')
       })
     },

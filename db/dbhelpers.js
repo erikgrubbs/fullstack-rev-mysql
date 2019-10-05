@@ -5,7 +5,7 @@ module.exports = {
   students: {
     getStudent: function (callback) {
       // fetch all students
-      var queryStr = 'SELECT name, imgurl FROM students INNER JOIN images ON images.id = students.id;';
+      var queryStr = 'SELECT students.id, name, imgurl FROM students INNER JOIN images ON images.id = students.id;';
       db.query(queryStr, function(err, results) {
         callback(err, results);
       });
@@ -17,8 +17,8 @@ module.exports = {
         callback(err, results);
       });
     },
-    updateName: function ({id, newName}, callback) {
-      var updateQueryStr = (`UPDATE students SET name = '${newName}' WHERE id = ${id};`)
+    updateName: function (obj, callback) {
+      var updateQueryStr = `UPDATE students SET name = '${obj.newName}' WHERE id = ${obj.id};`;
       db.query(updateQueryStr, function(err, results) {
         callback(err, results);
       });
